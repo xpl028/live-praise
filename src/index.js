@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { useState } from "react";
 import ReactDom from "react-dom";
 import cx from "classnames";
 import "./index.css";
@@ -12,34 +12,47 @@ const imgList = [
   "https://ae01.alicdn.com/kf/Hc309b7f728aa4247bca39bc69c6592d3J.jpg",
 ];
 
-class Index extends PureComponent {
-  componentDidMount() {
-    setInterval(() => {
-      this.renderImg();
-    }, 300);
-  }
-  renderImg = () => {
+function Index() {
+  const [ele, setEle] = useState([]);
+
+  const onPraise = () => {
     const b = Math.floor(Math.random() * 6) + 1;
     const bl = Math.floor(Math.random() * 11) + 1;
 
-    return (
+    const newEle = [
       <div
-        style={{ backgroundImage: `url(${imgList[b - 1]})` }}
-        className={cx("bubble", `bl${bl}`)}
+        key={String(Date.now())}
         data-set={String(Date.now())}
-      />
-    );
+        className={cx("bubble", `bl${bl}`)}
+        style={{ backgroundImage: `url(${imgList[b - 1]})` }}
+      />,
+    ];
+
+    setEle([...ele, ...newEle]);
+
+    // 清除元素
+    setTimeout(() => {
+      setEle([]);
+    }, 4000);
+
+    //   const doc = document.getElementById("praise");
+    //   let newEle = document.createElement("div");
+    //   newEle.className = `bubble bl${bl}`;
+    //   newEle.dataset.t = String(Date.now());
+    //   newEle.style.backgroundImage = `url(${imgList[b - 1]})`;
+    //   doc.appendChild(newEle);
   };
 
-  render() {
-    return (
-      <div className="container">
-        <div className="praise" id="praise">
-          {this.renderImg()}
-        </div>
+  return (
+    <div className="container">
+      <div className="praise" id="praise">
+        {ele.map((item) => item)}
       </div>
-    );
-  }
+      <div className="btn" onClick={onPraise}>
+        点赞
+      </div>
+    </div>
+  );
 }
 
 ReactDom.render(<Index />, document.getElementById("root"));
